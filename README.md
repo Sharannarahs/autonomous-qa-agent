@@ -1,101 +1,95 @@
 # 🤖 Autonomous QA Agent  
-### _Test Case Generator + Selenium Script Generator_  
+### _AI-Powered Test Case Generator + Selenium Script Generator_  
 ### _FastAPI · Streamlit · Gemini AI · Python Selenium_
 
 ---
 
 ## 📌 Overview
 
-**Autonomous QA Agent** is an end-to-end AI-powered system that automatically:
+**Autonomous QA Agent** is a complete AI-driven testing system designed to assist QA engineers by automating the core testing workflow:
 
-- 📄 Ingests requirement documents (MD, TXT, JSON)  
-- 🌐 Ingests an HTML UI file for DOM-aware script generation  
-- 🧠 Generates grounded QA test cases using **Gemini AI**  
-- 📝 Produces fully runnable **Python Selenium** scripts  
-- 🧪 Verifies UI behavior using selectors from the actual HTML  
-- ⏳ Keeps the browser open until the user closes it manually  
-- 🖥️ Provides a clean Streamlit-based web interface  
+- 📄 Ingest requirement/specification documents (MD, TXT, JSON)  
+- 🌐 Ingest HTML UI files to extract real DOM selectors  
+- 🧠 Generate context-aware test cases grounded strictly in uploaded documents  
+- 📝 Auto-generate **real Selenium Python scripts** using actual DOM selectors  
+- 🧪 Verify UI changes using explicit waits and element assertions  
+- ⏳ Keep browser open after execution for manual inspection  
+- 🖥️ Provide an intuitive Streamlit user interface  
 
-This project helps testers automate the complete QA lifecycle:  
-**requirements → test cases → automation scripts → execution**.
-
----
-
-## 🛠️ Architecture
-
-project/
-│
-├── backend/ # FastAPI backend
-│ ├── app.py # API routes
-│ ├── kb.py # Knowledge base engine
-│ ├── llm_agent.py # Gemini LLM wrapper
-│
-├── frontend/
-│ ├── streamlit_app.py # Streamlit web UI
-│
-├── assets/ # Sample specs + HTML
-│
-├── data/ # Vector store (auto generated)
-│
-├── requirements.txt # Python deps
-├── .gitignore
-└── README.md
-
+This system automates the QA lifecycle:  
+**Requirements → Test Cases → Automated Selenium Scripts → Execution.**
 
 ---
 
-## ⚙️ Features
 
-### ✅ **1. Document Ingestion**
-Upload any number of supporting documents:
-- `product specifications`
-- `API docs`
-- `test guidelines`
-- `JSON configs`
-
-FastAPI stores them in a simple in-memory knowledge base.
+Each component works together to create a fully autonomous testing workflow.
 
 ---
 
-### ✅ **2. HTML UI Ingestion**
-Upload the UI file (`checkout.html` or any HTML).
-
-The system:
-- Stores the file
-- Parses selectors
-- Remembers the *last uploaded* HTML  
-- Uses that DOM for **accurate Selenium selectors**
+# ⚙️ Features & How They Work
 
 ---
 
-### ✅ **3. Test Case Generation (Gemini AI)**  
-Given a prompt (example: _“Generate test cases for discount code feature”_):
+## ✅ **1. Document Ingestion (Knowledge Base)**
 
-✔ Returns **valid JSON only**  
-✔ Each test case contains:
-Test_ID
-Feature
-Scenario
-Steps
-Expected_Result
-Grounded_In
-✔ Cleans any invalid characters using regex  
-✔ Rejects markdown or code blocks
+You can upload multiple supporting files:  
+✔ Product specs  
+✔ UI/UX guidelines  
+✔ Technical notes  
+✔ JSON config rules  
+✔ Error documentation  
+
+**How it works internally:**
+- FastAPI receives and decodes the uploaded file  
+- The file content is stored in memory + persisted in a vector directory  
+- The KnowledgeBase (`kb.py`) uses simple document storage (text chunks + metadata)  
+- When generating test cases, the system retrieves the most relevant documents  
+
+Stores MD/TXT/JSON documents.
 
 ---
 
-### ✅ **4. Selenium Script Generation**
-For any selected test case:
+## ✅ **2. HTML UI Ingestion (DOM Source for Selenium Script Generator)**
 
-✔ Uses the last uploaded HTML selectors  
-✔ Avoids inventing selectors  
-✔ Creates a full runnable script:
-- Chrome driver
-- Explicit waits (WebDriverWait)
-- Assertions
-- Correct file path (`file:///…/checkout.html`)
-- Keeps browser open:  
-  ```python
-  print("Test complete. Browser will remain open...")
-  input("Press ENTER to close browser...")
-  driver.quit()
+Upload the **actual HTML file** that the Selenium script should automate (“checkout.html” or any UI).
+
+**Why this matters:**
+- The AI reads the structure of the HTML  
+- Extracts real selectors (IDs, names, classes)  
+- Prevents hallucinated selectors  
+- Ensures Selenium scripts are *actually runnable*  
+
+
+Also, the backend remembers:
+So script generation always uses the *latest* HTML.
+
+---
+
+## ✅ **3. Test Case Generation (Gemini AI)**
+
+You type any QA prompt, for example:
+
+
+The system also:
+- Removes backticks with regex  
+- Ensures JSON loads successfully  
+- Stores test cases inside Streamlit session  
+
+---
+
+## 📄 Example Output (Generated Test Case)
+
+```json
+{
+  "Test_ID": "TC_DISCOUNT_001",
+  "Feature": "Discount Code",
+  "Scenario": "Apply valid discount code",
+  "Steps": [
+    "Add Item A to cart",
+    "Enter 'SAVE15' in the discount input field",
+    "Click 'Apply'"
+  ],
+  "Expected_Result": "Green success message appears and total reduces by 15%",
+  "Grounded_In": ["specs.md", "checkout.html"]
+}
+
