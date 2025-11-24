@@ -1,0 +1,4 @@
+- Validation errors must be red.
+- Success messages must be green.
+- Pay Now button must be green.
+- Required fields must show inline error messages.

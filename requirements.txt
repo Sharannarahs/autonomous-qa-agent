@@ -1,0 +1,14 @@
+fastapi
+uvicorn[standard]
+streamlit
+sentence-transformers
+transformers
+chromadb
+beautifulsoup4
+python-multipart
+pydantic
+aiofiles
+requests
+rich
+selenium
+tqdm

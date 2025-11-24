@@ -1,0 +1,20 @@
+# Python venv
+.venv/
+venv/
+ENV/
+
+# Cache files
+__pycache__/
+*.pyc
+
+# Local dev files
+*.log
+*.sqlite3
+
+# Streamlit & FastAPI artifacts
+*.db
+data/html/*.html
+
+# OS files
+.DS_Store
+Thumbs.db
