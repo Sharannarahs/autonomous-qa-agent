@@ -12,3 +12,4 @@ requests
 rich
 selenium
 tqdm
+google-generativeai
