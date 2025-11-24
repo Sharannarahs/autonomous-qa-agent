@@ -93,3 +93,46 @@ The system also:
   "Grounded_In": ["specs.md", "checkout.html"]
 }
 
+## 📄 Example Selenium Script (Generated)
+
+{
+  from selenium import webdriver
+  from selenium.webdriver.common.by import By
+  from selenium.webdriver.support.ui import WebDriverWait
+  from selenium.webdriver.support import expected_conditions as EC
+  
+  html_file_path = "file:///D:/.../checkout.html"
+  
+  driver = webdriver.Chrome()
+  driver.get(html_file_path)
+  
+  wait = WebDriverWait(driver, 10)
+  
+  try:
+      add_item1_button = wait.until(EC.element_to_be_clickable((By.ID, "add-item1")))
+      add_item1_button.click()
+  
+      discount_input = wait.until(EC.presence_of_element_located((By.ID, "discount-code")))
+      discount_input.send_keys("SAVE15")
+  
+      apply_button = wait.until(EC.element_to_be_clickable((By.ID, "apply-discount")))
+      apply_button.click()
+  
+      msg = wait.until(EC.visibility_of_element_located((By.ID, "discount-msg")))
+      assert msg.text == "Discount applied!"
+      
+      total = wait.until(EC.visibility_of_element_located((By.ID, "total")))
+      assert total.text == "17.00"
+  
+      print("Test passed successfully!")
+  
+  except Exception as e:
+      print("Test failed:", e)
+  
+  finally:
+      print("Test complete. Browser will remain open...")
+      input("Press ENTER to close browser...")
+      driver.quit()
+}
+
+
